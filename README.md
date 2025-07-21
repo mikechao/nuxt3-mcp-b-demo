@@ -10,11 +10,17 @@ MCP-B allows the website to become a MCP server exposing various tools. Read mor
 - MCP-B transports integration
 - Model Context Protocol SDK
 
+## Demo
+
+<video controls>
+  <source src="./assets/demo.mp4" type="video/mp4">
+</video>
+
 ## Setup
 
 ### 1. Install the Chrome Extension
 
-Install the [Chrome Extension](https://chromewebstore.google.com/detail/mcp-b/daohopfhkdelnpemnhlekblhnikhdhfa?authuser=0&hl=en)) 
+Install the [Chrome Extension](https://chromewebstore.google.com/detail/mcp-b/daohopfhkdelnpemnhlekblhnikhdhfa?authuser=0&hl=en)
 
 ### 2. Make sure to install dependencies:
 
