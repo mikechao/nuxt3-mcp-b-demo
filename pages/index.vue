@@ -3,3 +3,7 @@
     <h1>This is the index page</h1>
   </div>
 </template>
+
+<script setup lang="ts">
+
+</script>
