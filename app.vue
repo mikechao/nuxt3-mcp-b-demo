@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, nextTick } from 'vue'
+import { defineComponent } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { TabServerTransport } from '@mcp-b/transports';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -35,6 +35,8 @@ export default defineComponent({
       router.push('/')
     }
 
+    // onBeforeMount is only ran on the client side
+    // https://vuejs.org/api/composition-api-lifecycle#onbeforemount
     onBeforeMount(async () => {
       
       console.log('App beforeMount - initializing MCP server...');
