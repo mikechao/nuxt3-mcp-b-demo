@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 import { TabServerTransport } from '@mcp-b/transports';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { useMcpServer } from './composables/useMcpServer';
 
 // Use Nuxt's useState for reactive global state
 const count = useState('count', () => 0)
@@ -34,20 +35,7 @@ onBeforeMount(async () => {
   console.log('App beforeMount - initializing MCP server...');
 
   try {
-    const server = new McpServer({
-      name: 'my-app',
-      version: '1.0.0'
-    });
-
-    server.tool('sayHello', 'Says hello', {
-      name: z.string()
-    }, async ({ name }) => ({
-      content: [{ type: 'text', text: `Hello ${name}!` }]
-    }));
-
-    console.log('First tool defined, connecting transport...');
-    await server.connect(new TabServerTransport({ allowedOrigins: ['*'] }));
-    console.log('Transport connected, defining remaining tools...');
+    const { server } =await useMcpServer();
 
     // Define remaining tools AFTER connection
     server.tool('addCount', 'Adds a number to the count', {
