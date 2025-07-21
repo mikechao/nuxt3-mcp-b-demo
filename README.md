@@ -2,6 +2,8 @@
 
 A demo project showcasing integration of MCP-B (Model Context Protocol Browser) with Nuxt 3.
 
+MCP-B allows the website to become a MCP server exposing various tools. Read more about MCP-B [here](https://github.com/MiguelsPizza/WebMCP?tab=readme-ov-file)
+
 ## Features
 
 - Nuxt 3 framework
@@ -10,7 +12,11 @@ A demo project showcasing integration of MCP-B (Model Context Protocol Browser) 
 
 ## Setup
 
-Make sure to install dependencies:
+### 1. Install the Chrome Extension
+
+Install the [Chrome Extension](https://chromewebstore.google.com/detail/mcp-b/daohopfhkdelnpemnhlekblhnikhdhfa?authuser=0&hl=en)) 
+
+### 2. Make sure to install dependencies:
 
 ```bash
 # npm
@@ -26,7 +32,7 @@ yarn install
 bun install
 ```
 
-## Development Server
+### 3. Run Development Server
 
 Start the development server on `http://localhost:3000`:
 
@@ -44,38 +50,3 @@ yarn dev
 bun run dev
 ```
 
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
