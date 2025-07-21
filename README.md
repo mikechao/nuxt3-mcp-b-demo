@@ -1,6 +1,12 @@
-# Nuxt Minimal Starter
+# Nuxt 3 MCP-B Demo
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A demo project showcasing integration of MCP-B (Model Context Protocol Browser) with Nuxt 3.
+
+## Features
+
+- Nuxt 3 framework
+- MCP-B transports integration
+- Model Context Protocol SDK
 
 ## Setup
 
