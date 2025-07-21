@@ -10,7 +10,8 @@
 <script setup lang="ts">
 import { z } from 'zod'
 
-const count = ref(0)
+// Use the same global state defined in app.vue
+const count = useState('count', () => 0)
 
 const addCount = (num: number) => {
   count.value += num

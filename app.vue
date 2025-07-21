@@ -7,9 +7,6 @@
 import { useRouter } from 'vue-router'
 import { useMcpServer } from './composables/useMcpServer';
 
-// Use Nuxt's useState for reactive global state
-const count = useState('count', () => 0)
-
 const router = useRouter()
 
 const gotoAbout = () => {
