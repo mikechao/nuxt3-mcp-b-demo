@@ -5,18 +5,10 @@
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { TabServerTransport } from '@mcp-b/transports';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
 import { useMcpServer } from './composables/useMcpServer';
 
 // Use Nuxt's useState for reactive global state
 const count = useState('count', () => 0)
-
-const addCount = (num: number) => {
-  count.value += num
-  return count.value
-}
 
 const router = useRouter()
 
@@ -32,34 +24,12 @@ const gotoIndex = () => {
 // https://vuejs.org/api/composition-api-lifecycle#onbeforemount
 onBeforeMount(async () => {
   
-  console.log('App beforeMount - initializing MCP server...');
+  console.log('App beforeMount');
 
   try {
-    const { server } =await useMcpServer();
+    const { server } = await useMcpServer();
 
     // Define remaining tools AFTER connection
-    server.tool('addCount', 'Adds a number to the count', {
-      num: z.string()
-    }, async ({ num }) => {
-      addCount(Number(num))
-      return {
-        content: [{ type: 'text', text: `Added ${num} to the count! New count: ${count.value}` }]
-      }
-    });
-
-    server.tool('subtractCount', 'Subtracts a number from the count', {
-      num: z.string()
-    }, async ({ num }) => {
-      addCount(-Number(num))
-      return {
-        content: [{ type: 'text', text: `Subtracted ${num} from the count! New count: ${count.value}` }]
-      }
-    });
-
-    server.tool('getCount', 'Gets the current count', {}, async () => ({
-      content: [{ type: 'text', text: `The current count is ${count.value}` }]
-    }));
-
     server.tool('gotoAbout', 'Goes to the about page', {}, async () => {
       gotoAbout()
       return {
