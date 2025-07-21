@@ -12,9 +12,7 @@ MCP-B allows the website to become a MCP server exposing various tools. Read mor
 
 ## Demo
 
-<video controls>
-  <source src="./assets/demo.mp4" type="video/mp4">
-</video>
+<img src="assets/demo.gif" alt="Demo animation" width="400" />
 
 ## Setup
 
