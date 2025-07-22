@@ -4,6 +4,8 @@ A demo project showcasing integration of MCP-B (Model Context Protocol Browser) 
 
 MCP-B allows the website to become a MCP server exposing various tools. Read more about MCP-B [here](https://github.com/MiguelsPizza/WebMCP?tab=readme-ov-file)
 
+The code for the MCP Server and tools are in `app.vue`. Checkout the [composable branch](https://github.com/mikechao/nuxt3-mcp-b-demo/tree/composable) to see how to use MCP-B with a Nuxt 3 composable.
+
 ## Features
 
 - Nuxt 3 framework
