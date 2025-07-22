@@ -62,7 +62,7 @@ onBeforeMount(async () => {
     server.tool('subtractCount', 'Subtracts a number from the count', {
       num: z.number()
     }, async ({ num }) => {
-      addCount(num)
+      addCount(-num)
       return {
         content: [{ type: 'text', text: `Subtracted ${num} from the count! New count: ${count.value}` }]
       }
