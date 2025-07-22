@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@mcp-b/transports": "^0.2.0",
+    "@mcp-b/transports": "^1.0.0",
     "@modelcontextprotocol/sdk": "^1.16.0",
     "nuxt": "^3.17.7",
     "vue": "^3.5.17",
