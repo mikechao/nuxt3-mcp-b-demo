@@ -2,46 +2,140 @@ import { TabServerTransport } from "@mcp-b/transports";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod";
 
+// Types for better type safety
+interface McpServerInstance {
+  server: McpServer;
+  cleanup: () => Promise<void>;
+}
+
+interface McpServerError extends Error {
+  code?: string;
+  details?: unknown;
+}
+
 // Global singleton instance
 let serverInstance: McpServer | null = null;
 let serverPromise: Promise<McpServer> | null = null;
+let cleanupFunctions: (() => Promise<void>)[] = [];
 
-export const useMcpServer = async () => {
+export const useMcpServer = async (): Promise<McpServerInstance> => {
   // Return existing instance if already created
   if (serverInstance) {
-    console.log('returning existing MCP server instance')
-    return { server: serverInstance };
+    console.log('returning existing MCP server instance');
+    return { 
+      server: serverInstance,
+      cleanup: () => cleanupServer()
+    };
   }
 
   // Return existing promise if server is being created
   if (serverPromise) {
-    console.log('waiting for MCP server instance to be created')
+    console.log('waiting for MCP server instance to be created');
     const server = await serverPromise;
-    return { server };
+    return { 
+      server,
+      cleanup: () => cleanupServer()
+    };
   }
 
-  // Create new instance
-  console.log('creating MCP server instance in composable')
-  serverPromise = (async () => {
+  // Create new instance with proper error handling
+  console.log('creating MCP server instance in composable');
+  serverPromise = createServerInstance();
+
+  try {
+    const server = await serverPromise;
+    return { 
+      server,
+      cleanup: () => cleanupServer()
+    };
+  } catch (error) {
+    // Reset promise on failure to allow retry
+    serverPromise = null;
+    throw error;
+  }
+};
+
+async function createServerInstance(): Promise<McpServer> {
+  try {
     const server = new McpServer({
       name: 'mcp-server-composable',
       version: '1.0.0',
     });
 
+    // Register tool
     server.tool('sayHello', 'Says hello', {
-      name: z.string()
-    }, async ({ name }) => ({
-      content: [{ type: 'text', text: `Hello ${name}!` }]
-    }));
+      name: z.string().min(1, 'Name cannot be empty')
+    }, async ({ name }) => {
+      return {
+        content: [{ type: 'text', text: `Hello ${name}!` }]
+      };
+    });
 
-    console.log('First tool defined, connecting transport...');
-    await server.connect(new TabServerTransport({ allowedOrigins: ['*'] }));
-    console.log('Transport connected...');
+    console.log('Tools defined, connecting transport...');
+    
+    // Get allowed origins from runtime config or environment
+    const config = useRuntimeConfig();
+    const allowedOrigins = typeof config.public?.mcpAllowedOrigins === 'string'
+      ? config.public.mcpAllowedOrigins.split(',')
+      : ['http://localhost:3000']; // Safe default
+
+    const transport = new TabServerTransport({ 
+      allowedOrigins 
+    });
+
+    await server.connect(transport);
+    console.log('Transport connected successfully');
+
+    // Store cleanup function
+    cleanupFunctions.push(async () => {
+      try {
+        await transport.close();
+        console.log('Transport closed');
+      } catch (error) {
+        console.error('Error closing transport:', error);
+      }
+    });
 
     serverInstance = server;
     return server;
-  })();
 
-  const server = await serverPromise;
-  return { server };
+  } catch (error) {
+    const mcpError: McpServerError = error instanceof Error 
+      ? error 
+      : new Error('Unknown error creating MCP server');
+    
+    mcpError.code = 'MCP_SERVER_CREATION_FAILED';
+    mcpError.details = error;
+    
+    console.error('Failed to create MCP server:', mcpError);
+    throw mcpError;
+  }
+}
+
+async function cleanupServer(): Promise<void> {
+  try {
+    console.log('Cleaning up MCP server...');
+    
+    // Run all cleanup functions
+    await Promise.allSettled(
+      cleanupFunctions.map(cleanup => cleanup())
+    );
+    
+    // Reset state
+    serverInstance = null;
+    serverPromise = null;
+    cleanupFunctions = [];
+    
+    console.log('MCP server cleanup completed');
+  } catch (error) {
+    console.error('Error during MCP server cleanup:', error);
+    throw error;
+  }
+}
+
+// Nuxt plugin cleanup hook (optional)
+if (process.client) {
+  window.addEventListener('beforeunload', () => {
+    cleanupServer().catch(console.error);
+  });
 }
