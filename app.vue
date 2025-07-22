@@ -26,6 +26,7 @@ onBeforeMount(async () => {
   try {
     const { server } = await useMcpServer();
 
+    console.log('Registering goto tools...');
     // Define remaining tools AFTER connection
     server.tool('gotoAbout', 'Goes to the about page', {}, async () => {
       gotoAbout()

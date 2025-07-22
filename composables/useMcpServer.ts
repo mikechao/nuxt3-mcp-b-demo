@@ -6,6 +6,7 @@ import { z } from "zod";
 interface McpServerInstance {
   server: McpServer;
   cleanup: () => Promise<void>;
+  isCountToolsRegistered: Ref<boolean>;
 }
 
 interface McpServerError extends Error {
@@ -17,6 +18,7 @@ interface McpServerError extends Error {
 let serverInstance: McpServer | null = null;
 let serverPromise: Promise<McpServer> | null = null;
 let cleanupFunctions: (() => Promise<void>)[] = [];
+const isCountToolsRegistered = ref(false);
 
 export const useMcpServer = async (): Promise<McpServerInstance> => {
   // Return existing instance if already created
@@ -24,7 +26,8 @@ export const useMcpServer = async (): Promise<McpServerInstance> => {
     console.log('returning existing MCP server instance');
     return { 
       server: serverInstance,
-      cleanup: () => cleanupServer()
+      cleanup: () => cleanupServer(),
+      isCountToolsRegistered
     };
   }
 
@@ -34,7 +37,8 @@ export const useMcpServer = async (): Promise<McpServerInstance> => {
     const server = await serverPromise;
     return { 
       server,
-      cleanup: () => cleanupServer()
+      cleanup: () => cleanupServer(),
+      isCountToolsRegistered
     };
   }
 
@@ -46,7 +50,8 @@ export const useMcpServer = async (): Promise<McpServerInstance> => {
     const server = await serverPromise;
     return { 
       server,
-      cleanup: () => cleanupServer()
+      cleanup: () => cleanupServer(),
+      isCountToolsRegistered
     };
   } catch (error) {
     // Reset promise on failure to allow retry

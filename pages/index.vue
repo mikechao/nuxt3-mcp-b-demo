@@ -21,8 +21,12 @@ const addCount = (num: number) => {
 onBeforeMount( async () => {
   try {
     console.log('Index page beforeMount');
-    const { server } = await useMcpServer();
+    const { server, isCountToolsRegistered } = await useMcpServer();
 
+    if (isCountToolsRegistered.value) {
+      console.log('Count tools already registered, skipping...');
+      return;
+    }
     console.log('Index page beforeMount - initializing count tools...');
     server.tool('addCount', 'Adds a number to the count', {
       num: z.number()
@@ -45,7 +49,7 @@ onBeforeMount( async () => {
     server.tool('getCount', 'Gets the current count', {}, async () => ({
       content: [{ type: 'text', text: `The current count is ${count.value}` }]
     }));
-
+    isCountToolsRegistered.value = true;
   } catch (error) {
     console.error('Error during beforeMount:', error);
   }
