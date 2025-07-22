@@ -51,18 +51,18 @@ onBeforeMount(async () => {
 
     // Define remaining tools AFTER connection
     server.tool('addCount', 'Adds a number to the count', {
-      num: z.string()
+      num: z.number()
     }, async ({ num }) => {
-      addCount(Number(num))
+      addCount(num)
       return {
         content: [{ type: 'text', text: `Added ${num} to the count! New count: ${count.value}` }]
       }
     });
 
     server.tool('subtractCount', 'Subtracts a number from the count', {
-      num: z.string()
+      num: z.number()
     }, async ({ num }) => {
-      addCount(-Number(num))
+      addCount(num)
       return {
         content: [{ type: 'text', text: `Subtracted ${num} from the count! New count: ${count.value}` }]
       }
