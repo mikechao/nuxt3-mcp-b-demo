@@ -19,6 +19,9 @@ const gotoIndex = () => {
 
 // onBeforeMount is only ran on the client side
 // https://vuejs.org/api/composition-api-lifecycle#onbeforemount
+// The transport used from the McpServer requires a browser environment
+// can use onBeforeMount or a check on import.meta.client like in index.vue
+// to ensure the code only runs on the client side
 onBeforeMount(async () => {
   
   console.log('App beforeMount');

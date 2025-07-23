@@ -67,7 +67,9 @@ async function createServerInstance(): Promise<McpServer> {
       version: '1.0.0',
     });
 
-    // Register tool
+    // a tool needs to be registered before connecting the transport
+    // otherwise an error will be thrown when trying to register tools
+    // elsewhere like in index.vue and/or app.vue
     server.tool('sayHello', 'Says hello', {
       name: z.string().min(1, 'Name cannot be empty')
     }, async ({ name }) => {

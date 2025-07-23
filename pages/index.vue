@@ -10,7 +10,6 @@
 <script setup lang="ts">
 import { z } from 'zod'
 
-// Use the same global state defined in app.vue
 const count = useState('count', () => 0)
 
 const addCount = (num: number) => {
@@ -18,16 +17,12 @@ const addCount = (num: number) => {
   return count.value
 }
 
-onBeforeMount( async () => {
-  try {
-    console.log('Index page beforeMount');
-    const { server, isCountToolsRegistered } = await useMcpServer();
-
-    if (isCountToolsRegistered.value) {
-      console.log('Count tools already registered, skipping...');
-      return;
-    }
-    console.log('Index page beforeMount - initializing count tools...');
+// only run on the client side since the transport requires a browser environment
+// which is not available on the server side (ssr)
+if (import.meta.client) {
+  const { server, isCountToolsRegistered } = await useMcpServer();
+  if (!isCountToolsRegistered.value) {
+    console.log('Registering count tools...');
     server.tool('addCount', 'Adds a number to the count', {
       num: z.number()
     }, async ({ num }) => {
@@ -50,9 +45,9 @@ onBeforeMount( async () => {
       content: [{ type: 'text', text: `The current count is ${count.value}` }]
     }));
     isCountToolsRegistered.value = true;
-  } catch (error) {
-    console.error('Error during beforeMount:', error);
+  } else {
+    console.log('Count tools already registered, skipping...');
   }
-})
+}
 
 </script>
